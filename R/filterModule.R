@@ -62,14 +62,9 @@ filterModule <- function(input, output, session, data, logical, numeric,
   filter_data_frame <- reactive({
     data_ <- data
     for(i in names(data)) {
-      print(i)
-      print(head(data_))
       value <- input[[i]]
       if(class(data[[i]]) %in% c("numeric", "integer")) {
-        print(value[1])
-        print(value[2])
         data_ <- data_[data_[[i]] >= value[1] & data_[[i]] <= value[2], ]
-        print(head(data_))
       } else if(class(data[[i]]) %in% c("character", "factor") & value[1] != "") {
         data_ <- data_[data_[[i]] == value[1], ]
       }
