@@ -1,7 +1,7 @@
 Package: filterModule
 Type: Package
 Title: Shiny module for filtering a table
-Version: 0.1.0
+Version: 0.1.1
 Author: Nathan Byers
 Maintainer: Nathan Byers <natebyers@gmail.com>
 Description: Use this module in a shiny app for an automated set of filter
