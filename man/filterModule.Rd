@@ -25,16 +25,19 @@ ui <- fixedPage(
  filterModuleOuput("id1"),
 
  DT::dataTableOutput("table")
+
 )
 
 # main server
 server <- function(input, output, session) {
+
  data <- iris
  filter_data <- callModule(filterModule, "id1", data = data)
 
  output$table <- DT::renderDataTable({
    filter_data()
  })
+
 }
 
 # run app

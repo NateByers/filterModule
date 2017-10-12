@@ -26,8 +26,7 @@
 #'
 #'# run app
 #'shinyApp(ui, server)
-filterModule <- function(input, output, session, data, logical, numeric,
-                         integer, character, factor) {
+filterModule <- function(input, output, session, data) {
   ns <- session$ns
 
   filters <- lapply(names(data), function(name, data) {
@@ -46,16 +45,18 @@ filterModule <- function(input, output, session, data, logical, numeric,
   # dynamic controls
   output$dynamic_filters <- renderUI({
     tagList(
-      lapply(names(filters), function(name, filters) {
+      lapply(names(filters), function(name, filters, data) {
         if(filters[[name]]$widget == "slider") {
           min <- filters[[name]]$value[1]
           max <- filters[[name]]$value[2]
           sliderInput(ns(name), name, min = min, max = max, value = c(min, max))
         } else if(filters[[name]]$widget == "text") {
-          textInput(ns(name), name, value = filters[[name]]$value)
+          selectInput(ns(name), name,
+                      choices = sort(unique(data[[name]])),
+                      multiple = TRUE)
         }
 
-      }, filters = filters)
+      }, filters = filters, data = data)
     )
   })
 
@@ -63,9 +64,10 @@ filterModule <- function(input, output, session, data, logical, numeric,
     data_ <- data
     for(i in names(data)) {
       value <- input[[i]]
+      print(value)
       if(class(data[[i]]) %in% c("numeric", "integer")) {
         data_ <- data_[data_[[i]] >= value[1] & data_[[i]] <= value[2], ]
-      } else if(class(data[[i]]) %in% c("character", "factor") & value[1] != "") {
+      } else if(class(data[[i]]) %in% c("character", "factor") & !is.null(value[1])) {
         data_ <- data_[data_[[i]] == value[1], ]
       }
     }
